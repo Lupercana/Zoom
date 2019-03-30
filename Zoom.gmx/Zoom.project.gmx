@@ -24,6 +24,7 @@
     <object>objects\obj_cmd</object>
     <object>objects\obj_player</object>
     <object>objects\obj_player_arrow</object>
+    <object>objects\obj_platform</object>
     <object>objects\obj_wall</object>
   </objects>
   <rooms name="rooms">

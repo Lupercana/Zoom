@@ -34,14 +34,16 @@ global.KEY_JUMP = ord('W');
 global.KEY_DASH = vk_space; // So laptops can play easily
 
 // Acceleration
-global.ACCEL_GRAV = 0.01;
-global.ACCEL_MOVE = 1;
+global.ACCEL_GRAV = 0.1;
+global.ACCEL_MOVE = 0.1;
 global.ACCEL_JUMP = 1;
-global.ACCEL_FRICTION = 0;
+
 
 // Velocities
 global.VEL_START_MOVE = 2;
-global.VEL_MAX = 10;
+global.VEL_MAX = 30;
+global.VEL_LOSS = 0.2; // Percentage of energy loss on collisions
+global.VEL_DEADBAND = 0.1;
 
 // **********************************************************
 </string>

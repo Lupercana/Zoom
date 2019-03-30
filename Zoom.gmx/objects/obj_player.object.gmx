@@ -30,6 +30,7 @@ x_accel = 0;
 y_accel = 0;
 x_vel = 0;
 y_vel = 0;
+in_collision = false;
 
 arrow_id = instance_create(x, y, obj_player_arrow);
 arrow_id.attached_id = id;
@@ -75,6 +76,16 @@ if (move_right)
     x_accel = global.ACCEL_MOVE;
 }
 
+if (!place_meeting(x, y, obj_platform)) // not colliding with a platform object
+{
+    y_accel = -global.ACCEL_GRAV;
+    in_collision = false;
+}
+else // colliding with a platform
+{
+       
+}
+
 // Velocity updates
 if (l2_norm((x_vel + x_accel), y_vel) &lt;= global.VEL_MAX)
 {
@@ -87,8 +98,74 @@ if (l2_norm(abs(y_vel + y_accel), x_vel) &lt;= global.VEL_MAX)
 }
 
 // Position updates (Flip y coordinates here, thus moving down INCREASES y)
-x += x_vel;
-y -= y_vel; // lower y means higher on the screen 
+if (!in_collision || !place_meeting(x + x_vel, y, obj_platform))
+{
+    x += x_vel;
+}
+
+if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
+{
+    y -= y_vel; // lower y means higher on the screen
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_platform">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if (!in_collision)
+{
+    var col_dir = point_direction(x, y, other.x, other.y);
+    var col_lr = (round(abs(dsin(col_dir))) * 2 - 1); // -1 if horizontal collision
+    var col_up = (round(abs(dcos(col_dir))) * 2 - 1); // -1 if vertical collision
+    
+    // Apply energy loss on collision
+    x_vel *= 1 - global.VEL_LOSS;
+    y_vel *= 1 - global.VEL_LOSS;
+    if (abs(x_vel) &lt;= global.VEL_DEADBAND)
+    {
+        x_vel = 0;
+    }
+    if (abs(y_vel) &lt;= global.VEL_DEADBAND)
+    {
+        y_vel = 0;
+    }
+        
+    x_vel = col_lr * x_vel;
+    y_vel = col_up * y_vel;
+    
+    // Dig out of ground
+    if (col_lr == -1)
+    {
+        while (place_meeting(x, y - y_vel, obj_platform))
+        {
+            x += sign(x_vel);
+        }
+    }
+    if (col_up == -1)
+    {
+        while (place_meeting(x + x_vel, y, obj_platform))
+        {
+            y -= sign(y_vel);
+        }
+    }
+}
 </string>
           </argument>
         </arguments>
