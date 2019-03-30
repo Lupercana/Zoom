@@ -5,9 +5,30 @@
   </Configs>
   <NewExtensions/>
   <sounds name="sound"/>
-  <sprites name="sprites"/>
-  <backgrounds name="background"/>
+  <sprites name="sprites">
+    <sprite>sprites\sp_player</sprite>
+    <sprite>sprites\sp_player_arrow</sprite>
+    <sprite>sprites\sp_wall</sprite>
+    <sprites name="Particles">
+      <sprite>sprites\sp_collision_particle</sprite>
+    </sprites>
+  </sprites>
+  <backgrounds name="background">
+    <background>background\bg_black</background>
+  </backgrounds>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\l2_norm.gml</script>
+  </scripts>
+  <objects name="objects">
+    <object>objects\obj_cmd</object>
+    <object>objects\obj_player</object>
+    <object>objects\obj_player_arrow</object>
+    <object>objects\obj_wall</object>
+  </objects>
+  <rooms name="rooms">
+    <room>rooms\rm_lv1</room>
+  </rooms>
   <help>
     <rtf>help.rtf</rtf>
   </help>
