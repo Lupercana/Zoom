@@ -31,6 +31,8 @@ y_accel = 0;
 x_vel = 0;
 y_vel = 0;
 in_collision = false;
+can_jump = true;
+dash_count = global.MAX_DASHES;
 
 arrow_id = instance_create(x, y, obj_player_arrow);
 arrow_id.attached_id = id;
@@ -74,7 +76,7 @@ var move_dir = sign(x_vel);
     x_accel += accel_mag * global.ACCEL_FRICTION_MULT * cos(accel_dir + pi);
     y_accel += accel_mag * global.ACCEL_FRICTION_MULT * sin(accel_dir + pi);
     */
-    x_accel -= sign(x_vel) * global.ACCEL_FRICTION_MULT;
+    x_accel = sign(x_vel) * global.ACCEL_FRICTION_MULT;
 //}
 
 if (move_left)
@@ -106,6 +108,22 @@ if (l2_norm((x_vel + x_accel), y_vel) &lt;= global.VEL_MAX)
 if (l2_norm(abs(y_vel + y_accel), x_vel) &lt;= global.VEL_MAX)
 {
     y_vel += y_accel;
+}
+if (jump_pressed &amp;&amp; can_jump) // jump
+{
+    var y_vel_max = sqrt(sqr(global.VEL_MAX) - sqr(x_vel));
+    y_vel += global.VEL_JUMP_INC;
+    if (y_vel &gt; y_vel_max)
+    {
+        y_vel = y_vel_max;
+    }
+    
+    can_jump = false;
+}
+if (l2_norm(x_vel, y_vel) &lt; global.VEL_DEADBAND) // Velocity deadband
+{
+    x_vel = 0;
+    y_vel = 0;
 }
 
 // Position updates (Flip y coordinates here, thus moving down INCREASES y)
@@ -142,9 +160,18 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
             <kind>1</kind>
             <string>if (!in_collision)
 {
+    while (position_meeting(x + sign(x_vel) * (sprite_width / 2.0 + abs(x_vel)), y - y_vel, obj_platform))
+    {
+        x -= sign(x_vel);
+    }
+    while (position_meeting(x + x_vel, y - sign(y_vel) * (sprite_height / 2.0 + abs(y_vel)), obj_platform))
+    {
+        y += sign(y_vel);
+    }
+
     var col_dir = point_direction(x, y, other.x, other.y);
-    var col_lr = round(abs(dsin(col_dir))) * 2 - 1; // -1 if horizontal collision
-    var col_ud = round(abs(dcos(col_dir))) * 2 - 1; // -1 if vertical collision
+    var col_lr = abs(dsin(col_dir)) * 2 - 1; // -1 if horizontal collision
+    var col_ud = abs(dcos(col_dir)) * 2 - 1; // -1 if vertical collision
     
     // Apply energy loss on collision
     x_vel *= 1 - global.VEL_LOSS;
@@ -158,9 +185,10 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
         y_vel = 0;
     }
         
-    x_vel = col_lr * x_vel;
-    y_vel = col_ud * y_vel;
+    x_vel = sign(col_lr) * x_vel;
+    y_vel = sign(col_ud) * y_vel;
     
+    /*
     // Dig out of ground
     if (col_lr == -1)
     {
@@ -169,17 +197,41 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
             x += sign(x_vel);
         }
     }
-    if (col_ud == -1)
+    else if (col_ud == -1)
     {
         while (position_meeting(x + x_vel, y + sign(y_vel) * sprite_height / 2, obj_platform))
         {
             y -= sign(y_vel);
         }
     }
+    else
+    {
+
+    }
+    */
+    
+    can_jump = true;
+    dash_count = global.MAX_DASHES;
 }
 </string>
           </argument>
         </arguments>
+      </action>
+    </event>
+    <event eventtype="7" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>223</id>
+        <kind>0</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>0</useapplyto>
+        <exetype>1</exetype>
+        <functionname>action_current_room</functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
       </action>
     </event>
     <event eventtype="8" enumb="64">
@@ -200,7 +252,7 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
           <argument>
             <kind>1</kind>
             <string>/* Debug */
-draw_text(0, 0, x_accel);
+//draw_text(0, 0, x_accel);
 </string>
           </argument>
         </arguments>
