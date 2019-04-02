@@ -120,11 +120,16 @@ if (jump_pressed &amp;&amp; can_jump) // jump
     
     can_jump = false;
 }
-if (l2_norm(x_vel, y_vel) &lt; global.VEL_DEADBAND) // Velocity deadband
+/*
+if (abs(x_vel) &lt; global.VEL_DEADBAND) // Velocity deadband
 {
     x_vel = 0;
+}
+if (abs(y_vel) &lt; global.VEL_DEADBAND) // Velocity deadband
+{
     y_vel = 0;
 }
+*/
 
 // Position updates (Flip y coordinates here, thus moving down INCREASES y)
 if (!in_collision || !place_meeting(x + x_vel, y, obj_platform))
