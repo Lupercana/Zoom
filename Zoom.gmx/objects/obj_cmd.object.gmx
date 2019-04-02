@@ -37,7 +37,7 @@ global.KEY_DASH = vk_space; // So laptops can play easily
 global.ACCEL_GRAV = 0.1;
 global.ACCEL_MOVE = 0.1;
 global.ACCEL_JUMP = 1;
-
+global.ACCEL_FRICTION_MULT = 0.002;
 
 // Velocities
 global.VEL_START_MOVE = 2;

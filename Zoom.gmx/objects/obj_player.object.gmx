@@ -66,6 +66,17 @@ var dash_pressed = keyboard_check_pressed(global.KEY_DASH);
 var move_dir = sign(x_vel);
 
 // Acceleration updates
+//if (place_meeting(x, y, obj_platform)) // Apply friction
+//{
+    /*
+    var accel_mag = l2_norm(x_accel, y_accel);
+    var accel_dir = arctan2(y_accel, x_accel);
+    x_accel += accel_mag * global.ACCEL_FRICTION_MULT * cos(accel_dir + pi);
+    y_accel += accel_mag * global.ACCEL_FRICTION_MULT * sin(accel_dir + pi);
+    */
+    x_accel -= sign(x_vel) * global.ACCEL_FRICTION_MULT;
+//}
+
 if (move_left)
 {
     x_accel = -global.ACCEL_MOVE;
@@ -132,8 +143,8 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
             <string>if (!in_collision)
 {
     var col_dir = point_direction(x, y, other.x, other.y);
-    var col_lr = (round(abs(dsin(col_dir))) * 2 - 1); // -1 if horizontal collision
-    var col_up = (round(abs(dcos(col_dir))) * 2 - 1); // -1 if vertical collision
+    var col_lr = round(abs(dsin(col_dir))) * 2 - 1; // -1 if horizontal collision
+    var col_ud = round(abs(dcos(col_dir))) * 2 - 1; // -1 if vertical collision
     
     // Apply energy loss on collision
     x_vel *= 1 - global.VEL_LOSS;
@@ -148,19 +159,19 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
     }
         
     x_vel = col_lr * x_vel;
-    y_vel = col_up * y_vel;
+    y_vel = col_ud * y_vel;
     
     // Dig out of ground
     if (col_lr == -1)
     {
-        while (place_meeting(x, y - y_vel, obj_platform))
+        while (position_meeting(x - sign(x_vel) * sprite_width / 2, y - y_vel, obj_platform))
         {
             x += sign(x_vel);
         }
     }
-    if (col_up == -1)
+    if (col_ud == -1)
     {
-        while (place_meeting(x + x_vel, y, obj_platform))
+        while (position_meeting(x + x_vel, y + sign(y_vel) * sprite_height / 2, obj_platform))
         {
             y -= sign(y_vel);
         }
@@ -189,7 +200,7 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
           <argument>
             <kind>1</kind>
             <string>/* Debug */
-//draw_text(0, 0, x_accel);
+draw_text(0, 0, x_accel);
 </string>
           </argument>
         </arguments>
