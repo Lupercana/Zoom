@@ -120,6 +120,24 @@ if (jump_pressed &amp;&amp; can_jump) // jump
     
     can_jump = false;
 }
+if (dash_pressed &amp;&amp; dash_count &gt; 0)
+{
+    var dash_dir = arrow_id.image_angle + 90; // add 90 for image axis rotation
+    
+    var dash_hori_inc = dcos(dash_dir) * global.VEL_DASH_INC;
+    var dash_vert_inc = dsin(dash_dir) * global.VEL_DASH_INC;
+    x_vel += dash_hori_inc;
+    y_vel += dash_vert_inc;
+
+    var total_vel = l2_norm(x_vel, y_vel);
+    if (total_vel &gt; global.VEL_MAX)
+    {
+        x_vel = dcos(dash_dir) * global.VEL_MAX;
+        y_vel = dsin(dash_dir) * global.VEL_MAX;
+    }
+
+    dash_count -= 1;
+}
 /*
 if (abs(x_vel) &lt; global.VEL_DEADBAND) // Velocity deadband
 {
@@ -174,7 +192,7 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
         y += sign(y_vel);
     }
 
-    var col_dir = point_direction(x, y, other.x, other.y);
+    var col_dir = point_direction(x, y, other.x, other.y); // darctan2(y_vel, x_vel);
     var col_lr = abs(dsin(col_dir)) * 2 - 1; // -1 if horizontal collision
     var col_ud = abs(dcos(col_dir)) * 2 - 1; // -1 if vertical collision
     
@@ -217,6 +235,8 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
     
     can_jump = true;
     dash_count = global.MAX_DASHES;
+    
+    part_particles_create(global.particle_system, x + dcos(col_dir) * sprite_width / 2, y - dsin(col_dir) * sprite_height / 2, global.bounce_particle, 20);
 }
 </string>
           </argument>
@@ -257,7 +277,7 @@ if (!in_collision || !place_meeting(x, y - y_vel, obj_platform))
           <argument>
             <kind>1</kind>
             <string>/* Debug */
-//draw_text(0, 0, x_accel);
+//draw_text(0, 0, arrow_id.image_angle);
 </string>
           </argument>
         </arguments>

@@ -44,11 +44,29 @@ global.ACCEL_FRICTION_MULT = 0.0001;
 // Velocities
 global.VEL_START_MOVE = 2;
 global.VEL_JUMP_INC = 5;
+global.VEL_DASH_INC = 5;
 global.VEL_MAX = 30;
 global.VEL_LOSS = 0.2; // Percentage of energy loss on collisions
 global.VEL_DEADBAND = 0.1;
 
 // **********************************************************
+
+/* Particles */
+
+global.particle_system = part_system_create();
+
+// Bounce
+global.bounce_particle = part_type_create();
+part_type_shape(global.bounce_particle, pt_shape_pixel);
+//part_type_sprite(global.bounce_particle, sp_collision_particle, 0, 0, 0);
+part_type_color1(global.bounce_particle, c_white);
+part_system_depth(global.bounce_particle, 5);
+part_type_scale(global.bounce_particle, 1, 1);
+part_type_size(global.bounce_particle, 1, 1, 0, 0);
+part_type_orientation(global.bounce_particle, 0, 359, 1, 20, 1);
+part_type_direction(global.bounce_particle, 0, 359, 1, 20);
+part_type_speed(global.bounce_particle, 1, 5, 0, 0);
+part_type_life(global.bounce_particle, 5, 15);
 </string>
           </argument>
         </arguments>
