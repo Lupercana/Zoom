@@ -38,6 +38,11 @@
     <room>rooms\rm_lv3</room>
     <room>rooms\rm_lv4</room>
     <room>rooms\rm_lv5</room>
+    <room>rooms\rm_lv6</room>
+    <room>rooms\rm_lv7</room>
+    <room>rooms\rm_lv8</room>
+    <room>rooms\rm_lv9</room>
+    <room>rooms\rm_lv10</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>
